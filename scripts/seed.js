@@ -1,7 +1,7 @@
 const { db } = require('@vercel/postgres');
 const {
-  invoices,
-  customers,
+  orders,
+  materials,
   revenue,
   users,
 } = require('../app/lib/placeholder-data.js');
@@ -46,81 +46,83 @@ async function seedUsers(client) {
   }
 }
 
-async function seedInvoices(client) {
+async function seedMaterials(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
-    // Create the "invoices" table if it doesn't exist
+    // Create the "materials" table if it doesn't exist
     const createTable = await client.sql`
-    CREATE TABLE IF NOT EXISTS invoices (
+    CREATE TABLE IF NOT EXISTS materials (
     id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    customer_id UUID NOT NULL,
-    amount INT NOT NULL,
-    status VARCHAR(255) NOT NULL,
-    date DATE NOT NULL
+    name VARCHAR(255) NOT NULL
   );
 `;
 
-    console.log(`Created "invoices" table`);
+    console.log(`Created "materials" table`);
 
-    // Insert data into the "invoices" table
-    const insertedInvoices = await Promise.all(
-      invoices.map(
-        (invoice) => client.sql`
-        INSERT INTO invoices (customer_id, amount, status, date)
-        VALUES (${invoice.customer_id}, ${invoice.amount}, ${invoice.status}, ${invoice.date})
+    // Insert data into the "materials" table
+    const insertedMaterials = await Promise.all(
+      materials.map(
+        (material) => client.sql`
+        INSERT INTO materials (id, name)
+        VALUES (${material.id}, ${material.name})
         ON CONFLICT (id) DO NOTHING;
       `,
       ),
     );
 
-    console.log(`Seeded ${insertedInvoices.length} invoices`);
+    console.log(`Seeded ${insertedMaterials.length} materials`);
 
     return {
       createTable,
-      invoices: insertedInvoices,
+      materials: insertedMaterials,
     };
   } catch (error) {
-    console.error('Error seeding invoices:', error);
+    console.error('Error seeding materials:', error);
     throw error;
   }
 }
 
-async function seedCustomers(client) {
+async function seedOrders(client) {
   try {
     await client.sql`CREATE EXTENSION IF NOT EXISTS "uuid-ossp"`;
 
-    // Create the "customers" table if it doesn't exist
+    // Create the "orders" table if it doesn't exist
     const createTable = await client.sql`
-      CREATE TABLE IF NOT EXISTS customers (
-        id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        email VARCHAR(255) NOT NULL,
-        image_url VARCHAR(255) NOT NULL
-      );
-    `;
+    CREATE TABLE IF NOT EXISTS orders (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    amount INT NOT NULL,
+    status VARCHAR(255) NOT NULL,
+    complexity VARCHAR(255) NOT NULL,
+    material_id UUID NOT NULL,
+    name VARCHAR(255) NOT NULL,
+    description VARCHAR(550) NOT NULL,
+    image_url VARCHAR(255) NOT NULL,
+    date DATE NOT NULL
+  );
+`;
 
-    console.log(`Created "customers" table`);
+    console.log(`Created "orders" table`);
 
-    // Insert data into the "customers" table
-    const insertedCustomers = await Promise.all(
-      customers.map(
-        (customer) => client.sql`
-        INSERT INTO customers (id, name, email, image_url)
-        VALUES (${customer.id}, ${customer.name}, ${customer.email}, ${customer.image_url})
+    // Insert data into the "orders" table
+    const insertedOrders = await Promise.all(
+      orders.map(
+        (order) => client.sql`
+        INSERT INTO orders (amount, status, complexity, material_id, name, description, image_url, date)
+        VALUES (${order.amount}, ${order.status}, ${order.complexity}, ${order.material_id}, ${order.name}, ${order.description}, ${order.image_url}, ${order.date})
         ON CONFLICT (id) DO NOTHING;
       `,
       ),
     );
 
-    console.log(`Seeded ${insertedCustomers.length} customers`);
+    console.log(`Seeded ${insertedOrders.length} orders`);
 
     return {
       createTable,
-      customers: insertedCustomers,
+      orders: insertedOrders,
     };
   } catch (error) {
-    console.error('Error seeding customers:', error);
+    console.error('Error seeding orders:', error);
     throw error;
   }
 }
@@ -164,8 +166,8 @@ async function main() {
   const client = await db.connect();
 
   await seedUsers(client);
-  await seedCustomers(client);
-  await seedInvoices(client);
+  await seedMaterials(client);
+  await seedOrders(client);
   await seedRevenue(client);
 
   await client.end();

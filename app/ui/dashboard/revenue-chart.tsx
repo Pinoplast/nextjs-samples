@@ -19,13 +19,13 @@ export default async function RevenueChart() {
   const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   if (!revenue || revenue.length === 0) {
-    return <p className="mt-4 text-gray-400">No data available.</p>;
+    return <p className="mt-4 text-gray-400">Немає інформації.</p>;
   }
 
   return (
     <div className="w-full md:col-span-4">
       <h2 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>
-        Recent Revenue
+        Кількість зроблених замовлень
       </h2>
       {/* NOTE: comment in this code when you get to this point in the course */}
 
@@ -43,7 +43,7 @@ export default async function RevenueChart() {
           {revenue.map((month) => (
             <div key={month.month} className="flex flex-col items-center gap-2">
               <div
-                className="w-full rounded-md bg-blue-300"
+                className="w-full rounded-md bg-yellow-300"
                 style={{
                   height: `${(chartHeight / topLabel) * month.revenue}px`,
                 }}
