@@ -39,6 +39,7 @@ export default function EditOrderForm({
                 id="name"
                 name="name"
                 type="text"
+                defaultValue={order.name}
                 placeholder="Введіть найменування"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="customer-error"
@@ -67,6 +68,7 @@ export default function EditOrderForm({
                 id="description"
                 name="description"
                 type="textbox"
+                defaultValue={order.description}
                 placeholder="Введіть опис"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="customer-error"
@@ -101,7 +103,7 @@ export default function EditOrderForm({
                 Виберіть матеріал
               </option>
               {materials.map((material) => (
-                <option key={material.id} value={material.id}>
+                <option key={material.id} value={material.id} selected={material.id === order.material_id}>
                   {material.name}
                 </option>
               ))}
@@ -131,6 +133,7 @@ export default function EditOrderForm({
                   name="complexity"
                   type="radio"
                   value="easy"
+                  defaultChecked={order.complexity === 'easy'}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
@@ -145,6 +148,7 @@ export default function EditOrderForm({
                   id="medium"
                   name="complexity"
                   type="radio"
+                  defaultChecked={order.complexity === 'medium'}
                   value="medium"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
@@ -160,6 +164,7 @@ export default function EditOrderForm({
                   id="difficult"
                   name="complexity"
                   type="radio"
+                  defaultChecked={order.complexity === 'difficult'}
                   value="difficult"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
@@ -194,6 +199,7 @@ export default function EditOrderForm({
                   id="inprogress"
                   name="status"
                   type="radio"
+                  defaultChecked={order.status === 'in progress'}
                   value="in progress"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
@@ -209,6 +215,7 @@ export default function EditOrderForm({
                   id="done"
                   name="status"
                   type="radio"
+                  defaultChecked={order.status === 'done'}
                   value="done"
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
@@ -243,6 +250,7 @@ export default function EditOrderForm({
                 name="amount"
                 type="number"
                 step="1"
+                defaultValue={order.amount}
                 placeholder="Введіть кількість"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 aria-describedby="customer-error"

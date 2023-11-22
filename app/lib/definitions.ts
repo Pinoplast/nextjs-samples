@@ -86,7 +86,13 @@ export type MaterialField = {
 
 export type OrderForm = {
   id: string;
-  customer_id: string;
+  material_id: string;
+  name: string;
+  description: string;
   amount: number;
-  status: 'pending' | 'paid';
+  complexity: 'easy' | 'medium' | 'difficult';
+  image_url: string;
+  date: string;
+  
+  status: string;
 };

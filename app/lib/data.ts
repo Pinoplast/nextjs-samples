@@ -165,7 +165,7 @@ export async function fetchOrderById(id: string) {
     const order = data.rows.map((order) => ({
       ...order,
       // Convert amount from cents to dollars
-      amount: order.amount / 100,
+      amount: order.amount,
     }));
 
     return order[0];
